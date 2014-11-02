@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache name="cachManager1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	>
+	<diskStore path="java.io.tempdir" />
+
+<cache name="demoCache" maxElementsInMemory="1" eternal="false"
+	timeToIdleSeconds="100" timeToLiveSeconds="100" overflowToDisk="false" />
+
+</ehcache>

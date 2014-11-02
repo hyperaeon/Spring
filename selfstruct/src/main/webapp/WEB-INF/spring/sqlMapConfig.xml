@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="LoginLog" type="com.smart.domain.LoginLog"/>
+		<typeAlias alias="LoginLogExample" type="com.smart.domain.LoginLogExample"/>
+		<typeAlias alias="Manager" type="com.smart.domain.Manager"/>
+		<typeAlias alias="ManagerExample" type="com.smart.domain.ManagerExample"/>
+		<typeAlias alias="User" type="com.smart.domain.User"/>
+		<typeAlias alias="UserExample" type="com.smart.domain.UserExample"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/smart/mappings/LoginLogMapper.xml" />
+		<mapper resource="com/smart/mappings/ManagerMapper.xml" />
+		<mapper resource="com/smart/mappings/UserMapper.xml" />
+	</mappers>
+</configuration>

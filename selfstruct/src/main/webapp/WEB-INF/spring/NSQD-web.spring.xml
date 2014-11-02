@@ -1,0 +1,78 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.servyou.nsqd" />
+	<import resource="classpath:NSQD-web-cache.spring.xml" />
+	<import resource="classpath:NSQD-web-db.spring.xml" />
+	<import resource="classpath:NSQD-web-security.spring.xml" />
+	<import resource="classpath:NSQD-web-rs.spring.xml" />
+	<!-- 
+	<import resource="classpath:webservice.xml" />
+	 -->
+	<context:property-placeholder location="classpath:nsqd.properties" />
+
+
+	<!-- AOP -->
+	<aop:config>
+		<aop:aspect ref="encryptAndDecryptInterceptor">
+			<aop:pointcut expression="execution(* com.servyou.nsqd.service.*.saveUser(..)) 
+								   or execution(* com.servyou.nsqd.service.*.modify*(..))
+								   or execution(* com.servyou.nsqd.service.*.isExistEmail(..))
+								   or execution(* com.servyou.nsqd.service.*.find*(..)) " id="encryptFieldsPoint" />
+			<aop:around method="encryptFields" pointcut-ref="encryptFieldsPoint" />
+		</aop:aspect>
+<!-- 		<aop:aspect ref="encryptAndDecryptInterceptor"> -->
+<!-- 			<aop:pointcut expression="execution(* com.servyou.nsqd.service.*.find*(..))" id="decodeFieldsPoint" /> -->
+<!-- 			<aop:around method="decodeFields" pointcut-ref="decodeFieldsPoint" /> -->
+<!-- 		</aop:aspect> -->
+	</aop:config>
+	
+	<bean id="encryptAndDecryptInterceptor" class="com.servyou.nsqd.advice.EncryptAndDecryptInterceptor" />
+
+	<!-- java mail -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>${mail.host}</value>
+		</property>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+			</props>
+		</property>
+		<property name="username">
+			<value>${mail.principal}</value>
+		</property>
+		<property name="password">
+			<value>${mail.credentials}</value>
+		</property>
+	</bean>  
+	
+	 <!-- 配置freeMarkerConfigurer进行属性值的注入 -->  
+    <bean id="freeMarkerConfigurer"  
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">  
+        <property name="templateLoaderPaths"  
+            value="classpath:template/mail/freemarker" />  
+        <property name="freemarkerSettings">  
+            <props>  
+                <prop key="template_update_delay">1800</prop><!-- 模板更新延时 -->  
+                <prop key="default_encoding">UTF-8</prop>  
+                <prop key="locale">zh_CN</prop>  
+            </props>  
+        </property>  
+    </bean>
+</beans>

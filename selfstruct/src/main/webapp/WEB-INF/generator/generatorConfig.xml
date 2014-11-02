@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry
+		location="C:/Users/Oliver/.m2/repository/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar" />
+	<context id="context1">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/mysql" userId="root"
+			password="root" />
+		<javaModelGenerator targetPackage="com.smart.domain"
+			targetProject="selfstruct" />
+		<sqlMapGenerator targetPackage="com.smart.mappings"
+			targetProject="selfstruct" />
+		<javaClientGenerator targetPackage="com.smart.dao"
+			targetProject="selfstruct" type="XMLMAPPER" />
+		<table schema="mysql" tableName="t_user" domainObjectName="User" />
+		<table schema="mysql" tableName="t_manager" domainObjectName="Manager" />
+		<table schema="mysql" tableName="t_login_log" domainObjectName="LoginLog" />
+	</context>
+</generatorConfiguration>

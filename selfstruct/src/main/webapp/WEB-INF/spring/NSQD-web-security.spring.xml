@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xmlns:cxf="http://cxf.apache.org/core" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop.xsd
+      http://cxf.apache.org/jaxws    
+      http://cxf.apache.org/schemas/jaxws.xsd
+      http://cxf.apache.org/jaxrs    
+      http://cxf.apache.org/schemas/jaxrs.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Shiro Filter -->
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/pages/geren/login.xhtml" />
+		<property name="unauthorizedUrl" value="/pages/geren/login.xhtml" />
+		<property name="successUrl" value="/pages/geren/home.xhtml" />
+		<property name="filterChainDefinitions">
+			<value>
+				/pages/geren/login.xhtml=anon
+				/pages/geren/register.xhtml=anon
+				/pages/geren/registerSuccess.xhtml=anon
+				/pages/geren/resetPassword.xhtml=anon
+				/pages/geren/activeAccount.xhtml=anon
+				/ws/**=anon
+				/javax.faces.resource/**=anon
+				/**=authc
+			</value>
+		</property>
+	</bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+		<property name="cacheManager" ref="shiroCacheManager" />
+	</bean>
+
+	<bean id="myRealm" class="com.servyou.nsqd.security.JdbcRealmWrapper">
+		<property name="dataSource" ref="dataSource" />
+		<property name="credentialsMatcher" ref="passwordMatcher" />
+		<property name="permissionsLookupEnabled" value="true" />
+	</bean>
+
+	<bean id="passwordMatcher" class="org.apache.shiro.authc.credential.PasswordMatcher"></bean>
+	
+	<bean id="shiroCacheManager" class="com.spring.cache.HazelcastCacheManager" >
+		<property name="hazelcastInstance" ref="hc-instance" />
+	</bean>
+<!-- 	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager" /> -->
+
+</beans>
